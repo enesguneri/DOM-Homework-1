@@ -15,7 +15,6 @@ typedef struct {
     int event_code;
 } DeviceLog;
 
-//void assignStringValue(char **token, char *separator, char *dest);
 
 int main(){
     FILE *csvFile = fopen("smartlogs.csv","r");
@@ -123,7 +122,3 @@ int main(){
 
     return 0;
 }
-
-
-
-
