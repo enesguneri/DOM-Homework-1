@@ -14,7 +14,7 @@ typedef struct {
     char firmware_ver[20];
     int event_code;
 } DeviceLog;
-
+//test
 
 //deneme
 int main(){
