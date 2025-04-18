@@ -14,9 +14,7 @@ typedef struct {
     char firmware_ver[20];
     int event_code;
 } DeviceLog;
-//test
 
-//deneme
 int main(){
     FILE *csvFile = fopen("smartlogs.csv","r");
     FILE *datFile = fopen("logdata.dat","wb");//With wb, we can open a file for writing in binary system.
