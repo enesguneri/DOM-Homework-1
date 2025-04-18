@@ -27,6 +27,7 @@ int main(){
         char *separator = ",";
         
 
+        fgets(line,sizeof(line),csvFile);//skip the first line
         while (fgets(line,sizeof(line),csvFile))
         {
             DeviceLog device;
