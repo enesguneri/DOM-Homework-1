@@ -66,6 +66,7 @@ int read_setup_params(const char *filename, int *keyStart, int *keyEnd, char *or
     return 0;
 }
 
+
 int read_binary_file(const char *filename, int keyStart, int keyEnd, int *recordCount, Record **records) {
     FILE *file = fopen(filename, "rb");
     if (!file) {
@@ -73,26 +74,30 @@ int read_binary_file(const char *filename, int keyStart, int keyEnd, int *record
         return 1;
     }
 
-    fseek(file, 0, SEEK_END);
+    fseek(file, keyStart, SEEK_END);
     long file_size = ftell(file);
-    fseek(file, 0, SEEK_SET);
+    fseek(file, keyStart, SEEK_SET);
 
-    int recordSize = keyEnd - keyStart;
-    *recordCount = file_size / recordSize;
-    *records = malloc(sizeof(Record) * (*recordCount));
+    int recordSize = keyEnd - keyStart + 1;
+    *recordCount = file_size / recordSize + 50;
+    *records = malloc(sizeof(Record) * (55));
 
-    for (int i = 0; i < *recordCount; i++) {
-        fread((*records)[i].alert_level, sizeof((*records)[i].alert_level), 8,file);
-        fread(&(*records)[i].battery, sizeof((*records)[i].battery), 8,file);
-        fread((*records)[i].device_id, sizeof((*records)[i].device_id), 8,file);
-        fread(&(*records)[i].event_code, sizeof((*records)[i].event_code), 8,file);
-        fread((*records)[i].firmware_ver, sizeof((*records)[i].firmware_ver), 8,file);
-        fread(&(*records)[i].humidity, sizeof((*records)[i].humidity), 8,file);
-        fread((*records)[i].location, sizeof((*records)[i].location), 8,file);
-        fread((*records)[i].status, sizeof((*records)[i].status), 8,file);
-        fread(&(*records)[i].temperature, sizeof((*records)[i].temperature), 8,file);
-        fread((*records)[i].timestamp, sizeof((*records)[i].timestamp), 8,file);
+    for (int i = 0; i < 55; i++) {
+        //&(*records)[i].battery = malloc(recordSize);
+        /*
+        fread((*records)[i].device_id, 1, 8,file);
+        fread((*records)[i].timestamp, 1, 8,file);
+        fread(&(*records)[i].temperature, 1, 8,file);
+        fread(&(*records)[i].humidity, 1, 8,file);
+        fread((*records)[i].status, 1, 8,file);
+        fread((*records)[i].location, 1, 8,file);
+        fread((*records)[i].alert_level, 1, 8,file);
+        fread(&(*records)[i].battery, 1, 8,file);
+        fread((*records)[i].firmware_ver, 1, 8,file);
+        fread(&(*records)[i].event_code, 1, 8,file);
         
+        */
+        fread(&(*records)[i], sizeof(Record), 1, file);
     }
 
     fclose(file);
@@ -104,13 +109,13 @@ void generate_xml(const char *filename, Record *records, int recordCount) {
     xmlNodePtr root_element = xmlNewNode(NULL, BAD_CAST "smartlogs");
     xmlDocSetRootElement(doc, root_element);
 
-    for (int i = 0; i < recordCount; i++) {
+    for (int i = 0; i < 55; i++) {
         xmlNodePtr entry = xmlNewChild(root_element, NULL, BAD_CAST "entry", NULL);
-
-        xmlNodePtr device = xmlNewChild(entry, NULL, BAD_CAST "device", BAD_CAST "");
         char tempID[10];
         snprintf(tempID, sizeof(tempID), "%d", i+1);//converting int to string
-        xmlNewProp(device, BAD_CAST "id", BAD_CAST tempID);//adding attribute to entry node(id is starting from 1)
+        xmlNewProp(entry, BAD_CAST "id", BAD_CAST tempID);//adding attribute to entry node(id is starting from 1)
+
+        xmlNodePtr device = xmlNewChild(entry, NULL, BAD_CAST "device", BAD_CAST "");
 
         xmlNewChild(device, NULL, BAD_CAST "device_id", BAD_CAST records[i].device_id);
         xmlNewChild(device, NULL, BAD_CAST "location", BAD_CAST records[i].location);
@@ -136,8 +141,8 @@ void generate_xml(const char *filename, Record *records, int recordCount) {
 
         char strEventCode[10];
         snprintf(strEventCode, sizeof(strEventCode), "%d", records[i].event_code);
-        xmlNewChild(entry, NULL, BAD_CAST "event_code", BAD_CAST strEventCode);
-        xmlNewProp(entry, BAD_CAST "", BAD_CAST "");//Attribute olarak big endian değerleri eklenecek
+        xmlNodePtr event_code = xmlNewChild(entry, NULL, BAD_CAST "event_code", BAD_CAST strEventCode);
+        xmlNewProp(event_code, BAD_CAST "", BAD_CAST "");//Attribute olarak big endian değerleri eklenecek
     }
 
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);

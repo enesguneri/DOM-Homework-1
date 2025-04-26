@@ -57,16 +57,17 @@ int main(int seperator_choice, int opsys_choice){
         break;
 }
 
+        seperator = ",";
         
-        
-        
-
         fgets(line,sizeof(line),csvFile);//skip the first line
         while (fgets(line,sizeof(line),csvFile))
         {
             DeviceLog device;
             char *token;
-            
+            char *crlf = strpbrk(line, end_of_line);
+            if(crlf != NULL) {
+                *crlf = 'a';
+            }
 
             //device id
             token = strtok(line,seperator);//bu komut ile line belleğe alınır. Daha sonraki null ile yapılan çağrımlarda virgülden sonraki değere geçer.
@@ -76,7 +77,7 @@ int main(int seperator_choice, int opsys_choice){
 
             //timestampt
             token = strtok(NULL,seperator);
-            if (token != NULL)
+            //if (token != NULL)
             {
                 strcpy(device.timestamp,token);
             }
