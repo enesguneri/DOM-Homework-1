@@ -56,17 +56,16 @@ int main(int seperator_choice, int opsys_choice){
         strcpy(end_of_line, "\r\n");
         break;
 }
-
-        seperator = ",";
         
         fgets(line,sizeof(line),csvFile);//skip the first line
         while (fgets(line,sizeof(line),csvFile))
         {
             DeviceLog device;
             char *token;
+
             char *crlf = strpbrk(line, end_of_line);
             if(crlf != NULL) {
-                *crlf = 'a';
+                *crlf = '\0';//satır sonu karakteri \0 ile değiştirilir.
             }
 
             //device id
