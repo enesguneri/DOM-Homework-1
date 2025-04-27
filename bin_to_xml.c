@@ -11,11 +11,11 @@ typedef struct {
     float temperature;
     float humidity;
     char status[10];
-    char location[50];
-    char alert_level[20];
+    char location[31];
+    char alert_level[10];
     int battery;
     char firmware_ver[20];
-    int event_code;
+    uint8_t event_code;
 } Record;
 
 int compare_records(const void *a, const void *b) {
@@ -79,24 +79,10 @@ int read_binary_file(const char *filename, int keyStart, int keyEnd, int *record
     fseek(file, keyStart, SEEK_SET);
 
     int recordSize = keyEnd - keyStart + 1;
-    *recordCount = file_size / recordSize + 50;
-    *records = malloc(sizeof(Record) * (55));
+    *recordCount = file_size / sizeof(Record);
+    *records = malloc(sizeof(Record) * (*recordCount));
 
-    for (int i = 0; i < 55; i++) {
-        //&(*records)[i].battery = malloc(recordSize);
-        /*
-        fread((*records)[i].device_id, 1, 8,file);
-        fread((*records)[i].timestamp, 1, 8,file);
-        fread(&(*records)[i].temperature, 1, 8,file);
-        fread(&(*records)[i].humidity, 1, 8,file);
-        fread((*records)[i].status, 1, 8,file);
-        fread((*records)[i].location, 1, 8,file);
-        fread((*records)[i].alert_level, 1, 8,file);
-        fread(&(*records)[i].battery, 1, 8,file);
-        fread((*records)[i].firmware_ver, 1, 8,file);
-        fread(&(*records)[i].event_code, 1, 8,file);
-        
-        */
+    for (int i = 0; i < *recordCount; i++) { 
         fread(&(*records)[i], sizeof(Record), 1, file);
     }
 
@@ -109,7 +95,7 @@ void generate_xml(const char *filename, Record *records, int recordCount) {
     xmlNodePtr root_element = xmlNewNode(NULL, BAD_CAST "smartlogs");
     xmlDocSetRootElement(doc, root_element);
 
-    for (int i = 0; i < 55; i++) {
+    for (int i = 0; i < recordCount; i++) {
         xmlNodePtr entry = xmlNewChild(root_element, NULL, BAD_CAST "entry", NULL);
         char tempID[10];
         snprintf(tempID, sizeof(tempID), "%d", i+1);//converting int to string
@@ -168,7 +154,6 @@ int main() {
     if (read_binary_file(dataFileName, keyStart, keyEnd, &recordCount, &records)) {
         return 1;
     }
-
     //qsort(records, recordCount, sizeof(Record), compare_records);
 
     generate_xml("smartlogs.xml", records, recordCount);

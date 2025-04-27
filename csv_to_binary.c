@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 typedef struct {
     char device_id[10];
@@ -8,11 +9,11 @@ typedef struct {
     float temperature;
     float humidity;
     char status[10];
-    char location[50];
-    char alert_level[20];
+    char location[31];
+    char alert_level[10];
     int battery;
     char firmware_ver[20];
-    int event_code;
+    uint8_t event_code;
 } DeviceLog;
 
 int main(int seperator_choice, int opsys_choice){
@@ -60,6 +61,8 @@ int main(int seperator_choice, int opsys_choice){
         fgets(line,sizeof(line),csvFile);//skip the first line
         while (fgets(line,sizeof(line),csvFile))
         {
+            char *ptrLine = line;
+
             DeviceLog device;
             char *token;
 
@@ -68,77 +71,97 @@ int main(int seperator_choice, int opsys_choice){
                 *crlf = '\0';//satır sonu karakteri \0 ile değiştirilir.
             }
 
+
             //device id
-            token = strtok(line,seperator);//bu komut ile line belleğe alınır. Daha sonraki null ile yapılan çağrımlarda virgülden sonraki değere geçer.
-            if(token != NULL){
+            token = strsep(&ptrLine,seperator);//strtok yerine strsep kullanılmasının nedeni strtok'un boşlukları atlaması.
+            if(*token != '\0'){
                 strcpy(device.device_id, token);
+            } else{
+                strcpy(device.device_id, "N/A");
             }
 
             //timestampt
-            token = strtok(NULL,seperator);
-            //if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if(*token != '\0')
             {
                 strcpy(device.timestamp,token);
+            } else {
+                strcpy(device.timestamp, "N/A");
             }
 
             //temperature
-            token = strtok(NULL,seperator);
-            if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if(*token != '\0')
             {
                 device.temperature = atof(token);
+            } else{
+                device.temperature = -999.0;
             }
 
             //humidity
-            token = strtok(NULL,seperator);
-            if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if(*token != '\0')
             {
                 device.humidity = atof(token);
+            } else{
+                device.humidity = -1.0;
             }
             
             //status
-            token = strtok(NULL,seperator);
-            if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if(*token != '\0')
             {
                 strcpy(device.status,token);
+            } else{
+                strcpy(device.status, "N/A");
             }
 
             //location
-            token = strtok(NULL,seperator);
-            if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if(*token != '\0')
             {
                 strcpy(device.location,token);
+            } else{
+                strcpy(device.location, "N/A");
             }
 
             //alert level
-            token = strtok(NULL,seperator);
-            if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if(*token != '\0')
             {
                 strcpy(device.alert_level,token);
+            } else{
+                strcpy(device.alert_level, "N/A");
             }
 
             //battery
-            token = strtok(NULL,seperator);
-            if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if(*token != '\0')
             {
                 device.battery = atoi(token);
+            } else{
+                device.battery = -1;
             }
 
             //firmware version
-            token = strtok(NULL,seperator);
-            if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if(*token != '\0')
             {
                 strcpy(device.firmware_ver,token);
+            } else{
+                strcpy(device.firmware_ver, "N/A");
             }
 
             //event code
-            token = strtok(NULL,seperator);
-            if (token != NULL)
+            token = strsep(&ptrLine,seperator);
+            if (*token != '\0' && atoi(token) >= 0 && atoi(token) <= 255)
             {
-                device.event_code = atoi(token);
+                device.event_code = (uint8_t)atoi(token);
+            } else{
+                device.event_code = (uint8_t)0;
             }
 
             fwrite(&device, sizeof(device) , 1, datFile);
-
         }
         
 
