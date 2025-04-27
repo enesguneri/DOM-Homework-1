@@ -11,8 +11,8 @@
       <humidity>77.000000</humidity>
       <battery>57</battery>
     </metrics>
+    <event_code>144</event_code>
     <timestamp>2025-03-16T08:31:11</timestamp>
-    <event_code ="">144</event_code>
   </entry>
   <entry id="2">
     <device>
@@ -25,8 +25,8 @@
       <humidity>67.000000</humidity>
       <battery>32</battery>
     </metrics>
+    <event_code>209</event_code>
     <timestamp>N/A</timestamp>
-    <event_code ="">209</event_code>
   </entry>
   <entry id="3">
     <device>
@@ -39,8 +39,8 @@
       <humidity>85.000000</humidity>
       <battery>88</battery>
     </metrics>
+    <event_code>230</event_code>
     <timestamp>2025-03-23T06:46:55</timestamp>
-    <event_code ="">230</event_code>
   </entry>
   <entry id="4">
     <device>
@@ -49,12 +49,12 @@
       <firmware_ver>v0.8.6</firmware_ver>
     </device>
     <metrics status="🔴" alert_level="HIGH">
-      <temperature>-22.29999</temperature>
+      <temperature>-22.299999</temperature>
       <humidity>-1.000000</humidity>
       <battery>1</battery>
     </metrics>
+    <event_code>109</event_code>
     <timestamp>2025-03-11T16:28:03</timestamp>
-    <event_code ="">109</event_code>
   </entry>
   <entry id="5">
     <device>
@@ -67,8 +67,8 @@
       <humidity>65.000000</humidity>
       <battery>8</battery>
     </metrics>
+    <event_code>152</event_code>
     <timestamp>2025-01-28T16:29:09</timestamp>
-    <event_code ="">152</event_code>
   </entry>
   <entry id="6">
     <device>
@@ -81,8 +81,8 @@
       <humidity>6.000000</humidity>
       <battery>0</battery>
     </metrics>
+    <event_code>238</event_code>
     <timestamp>2025-01-26T05:41:34</timestamp>
-    <event_code ="">238</event_code>
   </entry>
   <entry id="7">
     <device>
@@ -95,8 +95,8 @@
       <humidity>12.000000</humidity>
       <battery>100</battery>
     </metrics>
+    <event_code>141</event_code>
     <timestamp>2025-03-29T12:45:49</timestamp>
-    <event_code ="">141</event_code>
   </entry>
   <entry id="8">
     <device>
@@ -105,12 +105,12 @@
       <firmware_ver>v4.3.4</firmware_ver>
     </device>
     <metrics status="N/A" alert_level="LOW">
-      <temperature>-999.0000</temperature>
+      <temperature>-999.000000</temperature>
       <humidity>78.000000</humidity>
       <battery>67</battery>
     </metrics>
+    <event_code>61</event_code>
     <timestamp>2025-02-02T20:14:58</timestamp>
-    <event_code ="">61</event_code>
   </entry>
   <entry id="9">
     <device>
@@ -119,12 +119,12 @@
       <firmware_ver>v4.2.2</firmware_ver>
     </device>
     <metrics status="N/A" alert_level="MEDIUM">
-      <temperature>-999.0000</temperature>
+      <temperature>-999.000000</temperature>
       <humidity>89.000000</humidity>
       <battery>52</battery>
     </metrics>
+    <event_code>75</event_code>
     <timestamp>N/A</timestamp>
-    <event_code ="">75</event_code>
   </entry>
   <entry id="10">
     <device>
@@ -137,8 +137,8 @@
       <humidity>2.000000</humidity>
       <battery>48</battery>
     </metrics>
+    <event_code>15</event_code>
     <timestamp>2025-02-20T18:32:57</timestamp>
-    <event_code ="">15</event_code>
   </entry>
   <entry id="11">
     <device>
@@ -147,12 +147,12 @@
       <firmware_ver>v3.6.1</firmware_ver>
     </device>
     <metrics status="⚠️" alert_level="HIGH">
-      <temperature>-26.50000</temperature>
+      <temperature>-26.500000</temperature>
       <humidity>55.000000</humidity>
       <battery>86</battery>
     </metrics>
+    <event_code>86</event_code>
     <timestamp>2025-02-22T19:44:19</timestamp>
-    <event_code ="">86</event_code>
   </entry>
   <entry id="12">
     <device>
@@ -161,12 +161,12 @@
       <firmware_ver>v1.9.4</firmware_ver>
     </device>
     <metrics status="⚠️" alert_level="CRITICAL">
-      <temperature>-10.10000</temperature>
+      <temperature>-10.100000</temperature>
       <humidity>78.000000</humidity>
       <battery>65</battery>
     </metrics>
+    <event_code>35</event_code>
     <timestamp>2025-03-09T14:44:02</timestamp>
-    <event_code ="">35</event_code>
   </entry>
   <entry id="13">
     <device>
@@ -179,8 +179,8 @@
       <humidity>-1.000000</humidity>
       <battery>24</battery>
     </metrics>
+    <event_code>203</event_code>
     <timestamp>2025-01-03T09:12:17</timestamp>
-    <event_code ="">203</event_code>
   </entry>
   <entry id="14">
     <device>
@@ -193,8 +193,8 @@
       <humidity>10.000000</humidity>
       <battery>78</battery>
     </metrics>
+    <event_code>141</event_code>
     <timestamp>2025-03-09T12:48:44</timestamp>
-    <event_code ="">141</event_code>
   </entry>
   <entry id="15">
     <device>
@@ -207,8 +207,8 @@
       <humidity>59.000000</humidity>
       <battery>8</battery>
     </metrics>
+    <event_code>62</event_code>
     <timestamp>2025-02-26T19:19:32</timestamp>
-    <event_code ="">62</event_code>
   </entry>
   <entry id="16">
     <device>
@@ -221,8 +221,8 @@
       <humidity>58.000000</humidity>
       <battery>41</battery>
     </metrics>
+    <event_code>0</event_code>
     <timestamp>2025-03-03T17:14:53</timestamp>
-    <event_code ="">0</event_code>
   </entry>
   <entry id="17">
     <device>
@@ -235,8 +235,8 @@
       <humidity>56.000000</humidity>
       <battery>43</battery>
     </metrics>
+    <event_code>243</event_code>
     <timestamp>2025-02-13T09:52:41</timestamp>
-    <event_code ="">243</event_code>
   </entry>
   <entry id="18">
     <device>
@@ -249,8 +249,8 @@
       <humidity>91.000000</humidity>
       <battery>99</battery>
     </metrics>
+    <event_code>0</event_code>
     <timestamp>2025-03-13T01:22:15</timestamp>
-    <event_code ="">0</event_code>
   </entry>
   <entry id="19">
     <device>
@@ -263,8 +263,8 @@
       <humidity>77.000000</humidity>
       <battery>97</battery>
     </metrics>
+    <event_code>201</event_code>
     <timestamp>2025-01-15T11:37:24</timestamp>
-    <event_code ="">201</event_code>
   </entry>
   <entry id="20">
     <device>
@@ -277,8 +277,8 @@
       <humidity>85.000000</humidity>
       <battery>31</battery>
     </metrics>
+    <event_code>85</event_code>
     <timestamp>2025-01-31T21:43:15</timestamp>
-    <event_code ="">85</event_code>
   </entry>
   <entry id="21">
     <device>
@@ -287,12 +287,12 @@
       <firmware_ver>v0.7.3</firmware_ver>
     </device>
     <metrics status="🔴" alert_level="MEDIUM">
-      <temperature>-11.50000</temperature>
+      <temperature>-11.500000</temperature>
       <humidity>11.000000</humidity>
       <battery>9</battery>
     </metrics>
+    <event_code>187</event_code>
     <timestamp>2025-01-26T12:08:15</timestamp>
-    <event_code ="">187</event_code>
   </entry>
   <entry id="22">
     <device>
@@ -305,8 +305,8 @@
       <humidity>73.000000</humidity>
       <battery>98</battery>
     </metrics>
+    <event_code>0</event_code>
     <timestamp>2025-02-14T23:24:13</timestamp>
-    <event_code ="">0</event_code>
   </entry>
   <entry id="23">
     <device>
@@ -319,8 +319,8 @@
       <humidity>51.000000</humidity>
       <battery>42</battery>
     </metrics>
+    <event_code>199</event_code>
     <timestamp>2025-01-30T18:41:24</timestamp>
-    <event_code ="">199</event_code>
   </entry>
   <entry id="24">
     <device>
@@ -333,8 +333,8 @@
       <humidity>-1.000000</humidity>
       <battery>43</battery>
     </metrics>
+    <event_code>155</event_code>
     <timestamp>2025-02-04T20:28:06</timestamp>
-    <event_code ="">155</event_code>
   </entry>
   <entry id="25">
     <device>
@@ -343,12 +343,12 @@
       <firmware_ver>v2.6.2</firmware_ver>
     </device>
     <metrics status="⚠️" alert_level="MEDIUM">
-      <temperature>-999.0000</temperature>
+      <temperature>-999.000000</temperature>
       <humidity>28.000000</humidity>
       <battery>63</battery>
     </metrics>
+    <event_code>162</event_code>
     <timestamp>2025-01-23T17:21:22</timestamp>
-    <event_code ="">162</event_code>
   </entry>
   <entry id="26">
     <device>
@@ -361,8 +361,8 @@
       <humidity>48.000000</humidity>
       <battery>54</battery>
     </metrics>
+    <event_code>26</event_code>
     <timestamp>2025-03-19T12:53:38</timestamp>
-    <event_code ="">26</event_code>
   </entry>
   <entry id="27">
     <device>
@@ -375,8 +375,8 @@
       <humidity>55.000000</humidity>
       <battery>10</battery>
     </metrics>
+    <event_code>128</event_code>
     <timestamp>2025-03-19T06:28:25</timestamp>
-    <event_code ="">128</event_code>
   </entry>
   <entry id="28">
     <device>
@@ -389,8 +389,8 @@
       <humidity>12.000000</humidity>
       <battery>30</battery>
     </metrics>
+    <event_code>241</event_code>
     <timestamp>2025-01-28T01:35:40</timestamp>
-    <event_code ="">241</event_code>
   </entry>
   <entry id="29">
     <device>
@@ -399,12 +399,12 @@
       <firmware_ver>v3.5.2</firmware_ver>
     </device>
     <metrics status="⚠️" alert_level="HIGH">
-      <temperature>-11.00000</temperature>
+      <temperature>-11.000000</temperature>
       <humidity>40.000000</humidity>
       <battery>23</battery>
     </metrics>
+    <event_code>225</event_code>
     <timestamp>2025-01-06T21:47:07</timestamp>
-    <event_code ="">225</event_code>
   </entry>
   <entry id="30">
     <device>
@@ -417,8 +417,8 @@
       <humidity>96.000000</humidity>
       <battery>73</battery>
     </metrics>
+    <event_code>0</event_code>
     <timestamp>N/A</timestamp>
-    <event_code ="">0</event_code>
   </entry>
   <entry id="31">
     <device>
@@ -427,12 +427,12 @@
       <firmware_ver>v4.2.6</firmware_ver>
     </device>
     <metrics status="🔴" alert_level="LOW">
-      <temperature>-999.0000</temperature>
+      <temperature>-999.000000</temperature>
       <humidity>98.000000</humidity>
       <battery>34</battery>
     </metrics>
+    <event_code>24</event_code>
     <timestamp>2025-03-05T07:25:05</timestamp>
-    <event_code ="">24</event_code>
   </entry>
   <entry id="32">
     <device>
@@ -445,8 +445,8 @@
       <humidity>64.000000</humidity>
       <battery>69</battery>
     </metrics>
+    <event_code>234</event_code>
     <timestamp>2025-01-31T17:16:56</timestamp>
-    <event_code ="">234</event_code>
   </entry>
   <entry id="33">
     <device>
@@ -459,8 +459,8 @@
       <humidity>71.000000</humidity>
       <battery>18</battery>
     </metrics>
+    <event_code>30</event_code>
     <timestamp>2025-01-19T10:11:08</timestamp>
-    <event_code ="">30</event_code>
   </entry>
   <entry id="34">
     <device>
@@ -473,8 +473,8 @@
       <humidity>62.000000</humidity>
       <battery>58</battery>
     </metrics>
+    <event_code>225</event_code>
     <timestamp>2025-01-24T13:40:23</timestamp>
-    <event_code ="">225</event_code>
   </entry>
   <entry id="35">
     <device>
@@ -483,12 +483,12 @@
       <firmware_ver>N/A</firmware_ver>
     </device>
     <metrics status="🔴" alert_level="N/A">
-      <temperature>-29.10000</temperature>
+      <temperature>-29.100000</temperature>
       <humidity>68.000000</humidity>
       <battery>0</battery>
     </metrics>
+    <event_code>204</event_code>
     <timestamp>2025-01-19T17:23:03</timestamp>
-    <event_code ="">204</event_code>
   </entry>
   <entry id="36">
     <device>
@@ -497,12 +497,12 @@
       <firmware_ver>v5.5.3</firmware_ver>
     </device>
     <metrics status="⚠️" alert_level="HIGH">
-      <temperature>-21.70000</temperature>
+      <temperature>-21.700001</temperature>
       <humidity>44.000000</humidity>
       <battery>92</battery>
     </metrics>
+    <event_code>149</event_code>
     <timestamp>2025-01-29T02:09:03</timestamp>
-    <event_code ="">149</event_code>
   </entry>
   <entry id="37">
     <device>
@@ -515,8 +515,8 @@
       <humidity>46.000000</humidity>
       <battery>42</battery>
     </metrics>
+    <event_code>71</event_code>
     <timestamp>2025-02-14T18:02:11</timestamp>
-    <event_code ="">71</event_code>
   </entry>
   <entry id="38">
     <device>
@@ -529,8 +529,8 @@
       <humidity>71.000000</humidity>
       <battery>7</battery>
     </metrics>
+    <event_code>55</event_code>
     <timestamp>2025-03-07T10:57:41</timestamp>
-    <event_code ="">55</event_code>
   </entry>
   <entry id="39">
     <device>
@@ -539,12 +539,12 @@
       <firmware_ver>v2.0.1</firmware_ver>
     </device>
     <metrics status="🟢" alert_level="HIGH">
-      <temperature>-10.90000</temperature>
+      <temperature>-10.900000</temperature>
       <humidity>77.000000</humidity>
       <battery>24</battery>
     </metrics>
+    <event_code>174</event_code>
     <timestamp>2025-02-26T22:08:02</timestamp>
-    <event_code ="">174</event_code>
   </entry>
   <entry id="40">
     <device>
@@ -557,8 +557,8 @@
       <humidity>19.000000</humidity>
       <battery>98</battery>
     </metrics>
+    <event_code>226</event_code>
     <timestamp>N/A</timestamp>
-    <event_code ="">226</event_code>
   </entry>
   <entry id="41">
     <device>
@@ -571,8 +571,8 @@
       <humidity>95.000000</humidity>
       <battery>28</battery>
     </metrics>
+    <event_code>54</event_code>
     <timestamp>2025-02-25T10:28:21</timestamp>
-    <event_code ="">54</event_code>
   </entry>
   <entry id="42">
     <device>
@@ -585,8 +585,8 @@
       <humidity>59.000000</humidity>
       <battery>38</battery>
     </metrics>
+    <event_code>0</event_code>
     <timestamp>2025-03-03T15:38:40</timestamp>
-    <event_code ="">0</event_code>
   </entry>
   <entry id="43">
     <device>
@@ -599,8 +599,8 @@
       <humidity>49.000000</humidity>
       <battery>65</battery>
     </metrics>
+    <event_code>89</event_code>
     <timestamp>2025-03-11T20:36:51</timestamp>
-    <event_code ="">89</event_code>
   </entry>
   <entry id="44">
     <device>
@@ -609,12 +609,12 @@
       <firmware_ver>v2.4.8</firmware_ver>
     </device>
     <metrics status="⚠️" alert_level="CRITICAL">
-      <temperature>-14.40000</temperature>
+      <temperature>-14.400000</temperature>
       <humidity>-1.000000</humidity>
       <battery>66</battery>
     </metrics>
+    <event_code>60</event_code>
     <timestamp>2025-03-18T19:36:41</timestamp>
-    <event_code ="">60</event_code>
   </entry>
   <entry id="45">
     <device>
@@ -627,8 +627,8 @@
       <humidity>9.000000</humidity>
       <battery>100</battery>
     </metrics>
+    <event_code>213</event_code>
     <timestamp>2025-03-10T13:17:53</timestamp>
-    <event_code ="">213</event_code>
   </entry>
   <entry id="46">
     <device>
@@ -641,8 +641,8 @@
       <humidity>50.000000</humidity>
       <battery>63</battery>
     </metrics>
+    <event_code>173</event_code>
     <timestamp>2025-02-24T09:34:56</timestamp>
-    <event_code ="">173</event_code>
   </entry>
   <entry id="47">
     <device>
@@ -651,12 +651,12 @@
       <firmware_ver>v4.7.6</firmware_ver>
     </device>
     <metrics status="🟢" alert_level="HIGH">
-      <temperature>-29.90000</temperature>
+      <temperature>-29.900000</temperature>
       <humidity>82.000000</humidity>
       <battery>65</battery>
     </metrics>
+    <event_code>173</event_code>
     <timestamp>2025-02-12T22:03:53</timestamp>
-    <event_code ="">173</event_code>
   </entry>
   <entry id="48">
     <device>
@@ -665,12 +665,12 @@
       <firmware_ver>v2.2.7</firmware_ver>
     </device>
     <metrics status="⚠️" alert_level="CRITICAL">
-      <temperature>-999.0000</temperature>
+      <temperature>-999.000000</temperature>
       <humidity>72.000000</humidity>
       <battery>65</battery>
     </metrics>
+    <event_code>38</event_code>
     <timestamp>2025-02-06T04:27:42</timestamp>
-    <event_code ="">38</event_code>
   </entry>
   <entry id="49">
     <device>
@@ -683,8 +683,8 @@
       <humidity>72.000000</humidity>
       <battery>10</battery>
     </metrics>
+    <event_code>98</event_code>
     <timestamp>N/A</timestamp>
-    <event_code ="">98</event_code>
   </entry>
   <entry id="50">
     <device>
@@ -693,11 +693,11 @@
       <firmware_ver>v5.8.9</firmware_ver>
     </device>
     <metrics status="🟢" alert_level="MEDIUM">
-      <temperature>-27.29999</temperature>
+      <temperature>-27.299999</temperature>
       <humidity>-1.000000</humidity>
       <battery>64</battery>
     </metrics>
+    <event_code>36</event_code>
     <timestamp>2025-02-09T02:11:02</timestamp>
-    <event_code ="">36</event_code>
   </entry>
 </smartlogs>

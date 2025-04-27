@@ -24,7 +24,7 @@ typedef struct {
 typedef DeviceLog Record;
 
 // Corrected csv_to_binary function
-void csv_to_binary(int seperator_choice, int opsys_choice, const char *input_filename, const char *output_filename) {
+void csv_to_binary(int separator_choice, int opsys_choice, const char *input_filename, const char *output_filename) {
     FILE *csvFile = fopen(input_filename, "r");    
     FILE *datFile = fopen(output_filename, "wb"); 
 
@@ -32,15 +32,15 @@ void csv_to_binary(int seperator_choice, int opsys_choice, const char *input_fil
         printf("File not found.\n");
         return;
     } else {
-        char *seperator = NULL;
+        char *separator = NULL;
         char end_of_line[4] = "\r\n";
         char line[200];
 
-        switch (seperator_choice) {
-            case 1: seperator = ","; break;
-            case 2: seperator = " "; break;
-            case 3: seperator = ";"; break;
-            default: seperator = ","; break;
+        switch (separator_choice) {
+            case 1: separator = ","; break;
+            case 2: separator = " "; break;
+            case 3: separator = ";"; break;
+            default: separator = ","; break;
         }
         switch (opsys_choice) {
             case 1: strcpy(end_of_line, "\r\n"); break;
@@ -59,34 +59,34 @@ void csv_to_binary(int seperator_choice, int opsys_choice, const char *input_fil
             char *crlf = strpbrk(line, end_of_line);
             if (crlf != NULL) *crlf = '\0';
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             strcpy(device.device_id, (*token != '\0') ? token : "N/A");
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             strcpy(device.timestamp, (*token != '\0') ? token : "N/A");
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             device.temperature = (*token != '\0') ? atof(token) : -999.0f;
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             device.humidity = (*token != '\0') ? atof(token) : -1.0f;
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             strcpy(device.status, (*token != '\0') ? token : "N/A");
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             strcpy(device.location, (*token != '\0') ? token : "N/A");
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             strcpy(device.alert_level, (*token != '\0') ? token : "N/A");
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             device.battery = (*token != '\0') ? atoi(token) : -1;
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             strcpy(device.firmware_ver, (*token != '\0') ? token : "N/A");
 
-            token = strsep(&ptrLine, seperator);
+            token = strsep(&ptrLine, separator);
             device.event_code = (*token != '\0') ? (uint8_t)atoi(token) : 0;
 
             fwrite(&device, sizeof(DeviceLog), 1, datFile);
@@ -201,12 +201,12 @@ void generate_xml(const char *filename, Record *records, int recordCount) {
     xmlCleanupParser();
 }
 
-void binary_to_xml() {
+void binary_to_xml(const char *outputFile) {
     int keyStart, keyEnd;
     char order[4], dataFileName[100];
 
     if (read_setup_params("setupParams.json", &keyStart, &keyEnd, order, dataFileName)) {
-        return;
+        printf("okundu.\n");
     }
 
     printf("Key Start: %d\n", keyStart);
@@ -217,11 +217,79 @@ void binary_to_xml() {
     int recordCount;
     Record *records;
     if (read_binary_file(dataFileName, keyStart, keyEnd, &recordCount, &records)) {
-        return;
+        printf("okundu.\n");
     }
 
-    generate_xml("smartlogs.xml", records, recordCount);
+    generate_xml(outputFile, records, recordCount);
     free(records);
 
     printf("XML file generated successfully.\n");
+}
+
+int main(int argc, char *argv[]) {
+    if(argc == 8){
+
+    const char *input_file = argv[1];
+    const char *output_file = argv[2];
+    const char *conversion_type = argv[3];
+    int separator_choice;
+    int opsys_choice = atoi(argv[7]);
+    
+    
+    if (strcmp(conversion_type, "1") == 0) {
+        csv_to_binary(separator_choice, opsys_choice, input_file, output_file);
+    } else if (strcmp(conversion_type, "3") == 0) {
+        //validate_xml(input_file, output_file);
+    } else {
+        printf("Invalid conversion type.\n");
+        return 1;
+    }
+
+    if(strcmp(argv[4], "-separator") == 0) {
+        separator_choice = atoi(argv[5]);
+    } else {
+        printf("Invalid separator argument.\n");
+        return 1;
+    }
+
+    if (strcmp(argv[6], "-opsys") == 0) {
+        opsys_choice = atoi(argv[7]);
+    } else {
+        printf("Invalid OS argument.\n");
+        return 1;
+    }
+    }
+    else if(argc == 7){
+        const char *output_file = argv[1];
+        const char *conversion_type = argv[2];
+        printf("conversion_type: %s\n", conversion_type);
+        int separator_choice;
+        int opsys_choice;
+        if(strcmp(conversion_type, "2") == 0){
+            printf("argc: %d\n", argc);
+            if(strcmp(argv[3], "-separator") == 0) {
+                separator_choice = atoi(argv[4]);
+            } else {
+                printf("Invalid separator argument.\n");
+                return 1;
+            }
+            if (strcmp(argv[5], "-opsys") == 0) {
+                opsys_choice = atoi(argv[6]);
+            } else {
+                printf("Invalid OS argument.\n");
+                return 1;
+            }
+            binary_to_xml(output_file);
+        }
+    }
+    else if(argc < 3){
+        if (strcmp(argv[1], "-h") == 0) {
+            printf("Usage: ./devicelogs <input_file> <output_file> <conversion_type> -separator <1|2|3> -opsys <1|2|3> [-h]\n");
+            return 0;
+        }
+    }
+
+    printf("Conversion completed successfully.\n");
+
+    return 0;
 }
