@@ -290,5 +290,13 @@ int main(int argc, char *argv[]) {
 
     printf("Conversion completed successfully.\n");
 
+    //compile komutu
+    //gcc devicelogs.c -o devicelogs -I/usr/include/libxml2 -lxml2 -ljson-c
+
+    //run komutu örnekleri
+    //./devicelogs smartlogs.csv logdata.dat 1 -separator 1 -opsys 2
+    //./devicelogs smartlogs.xml 2 -separator 1 -opsys 2
+    //./devicelogs smartlogs.xml smartlogs.xsd 3 -separator 1 -opsys 2
+    //./devicelogs -h
     return 0;
 }
