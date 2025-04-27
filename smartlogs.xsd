@@ -103,14 +103,40 @@
                             <xs:element name="Timestamp" type="xs:dateTime"/>
 
                             <xs:element name="event_code">
-                                <xs:simpleType>
-                                    <xs:restriction base="xs:integer">
-                                        <xs:minInclusive value="0"/>
-                                        <xs:maxInclusive value="255"/>
-                                    </xs:restriction>
-                                </xs:simpleType>
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:int">
+                                            <xs:restriction base="xs:int">
+                                                <xs:minInclusive value="0"/>
+                                                <xs:maxInclusive value="255"/>
+                                            </xs:restriction>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                    <xs:attribute name="hexBig" use="required">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:pattern value="[0-9A-F]{8}"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="hexLittle" use="required">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:pattern value="[0-9A-F]{8}"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="decimal" use="required">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:pattern value="[0-9]{9}"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                </xs:complexType>
                             </xs:element>
 
+                            
                         </xs:sequence>
 
                         <xs:attribute name="id" type="xs:integer" use="required"/>
