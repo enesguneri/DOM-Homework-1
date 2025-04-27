@@ -206,7 +206,7 @@ void binary_to_xml(const char *outputFile) {
     char order[4], dataFileName[100];
 
     if (read_setup_params("setupParams.json", &keyStart, &keyEnd, order, dataFileName)) {
-        printf("okundu.\n");
+        return;
     }
 
     printf("Key Start: %d\n", keyStart);
@@ -217,7 +217,7 @@ void binary_to_xml(const char *outputFile) {
     int recordCount;
     Record *records;
     if (read_binary_file(dataFileName, keyStart, keyEnd, &recordCount, &records)) {
-        printf("okundu.\n");
+        return;
     }
 
     generate_xml(outputFile, records, recordCount);
@@ -262,7 +262,6 @@ int main(int argc, char *argv[]) {
     else if(argc == 7){
         const char *output_file = argv[1];
         const char *conversion_type = argv[2];
-        printf("conversion_type: %s\n", conversion_type);
         int separator_choice;
         int opsys_choice;
         if(strcmp(conversion_type, "2") == 0){
