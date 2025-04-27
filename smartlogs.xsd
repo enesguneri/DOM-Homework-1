@@ -139,7 +139,13 @@
                             
                         </xs:sequence>
 
-                        <xs:attribute name="id" type="xs:integer" use="required"/>
+                        <xs:attribute name="id" type="xs:integer" use="required">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="1000000"/>
+                                </xs:restriction>
+                            </xs:simpleType>
 
                     </xs:complexType>
                 </xs:element>
