@@ -20,9 +20,6 @@ typedef struct {
     uint8_t event_code;
 } DeviceLog;
 
-// Typedef for Record (same as DeviceLog)
-typedef DeviceLog Record;
-
 // Corrected csv_to_binary function
 void csv_to_binary(int separator_choice, int opsys_choice, const char *input_filename, const char *output_filename) {
     FILE *csvFile = fopen(input_filename, "r");    
@@ -138,7 +135,7 @@ int read_setup_params(const char *filename, int *keyStart, int *keyEnd, char *or
     return 0;
 }
 
-int read_binary_file(const char *filename, int keyStart, int keyEnd, int *recordCount, Record **records) {
+int read_binary_file(const char *filename, int keyStart, int keyEnd, int *recordCount, DeviceLog **records) {
     FILE *file = fopen(filename, "rb");
     if (!file) {
         fprintf(stderr, "Error opening binary file\n");
@@ -149,18 +146,18 @@ int read_binary_file(const char *filename, int keyStart, int keyEnd, int *record
     long file_size = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    *recordCount = file_size / sizeof(Record);
-    *records = malloc(sizeof(Record) * (*recordCount));
+    *recordCount = file_size / sizeof(DeviceLog);
+    *records = malloc(sizeof(DeviceLog) * (*recordCount));
 
     for (int i = 0; i < *recordCount; i++) {
-        fread(&(*records)[i], sizeof(Record), 1, file);
+        fread(&(*records)[i], sizeof(DeviceLog), 1, file);
     }
 
     fclose(file);
     return 0;
 }
 
-void generate_xml(const char *filename, Record *records, int recordCount) {
+void generate_xml(const char *filename, DeviceLog *records, int recordCount) {
     xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
     xmlNodePtr root_element = xmlNewNode(NULL, BAD_CAST "smartlogs");
     xmlDocSetRootElement(doc, root_element);
@@ -209,13 +206,13 @@ void binary_to_xml(const char *outputFile) {
         return;
     }
 
-    printf("Key Start: %d\n", keyStart);
-    printf("Key End: %d\n", keyEnd);
-    printf("Order: %s\n", order);
-    printf("Data File Name: %s\n", dataFileName);
+    //printf("Key Start: %d\n", keyStart);
+    //printf("Key End: %d\n", keyEnd);
+    //printf("Order: %s\n", order);
+    //printf("Data File Name: %s\n", dataFileName);
 
     int recordCount;
-    Record *records;
+    DeviceLog *records;
     if (read_binary_file(dataFileName, keyStart, keyEnd, &recordCount, &records)) {
         return;
     }
@@ -265,7 +262,6 @@ int main(int argc, char *argv[]) {
         int separator_choice;
         int opsys_choice;
         if(strcmp(conversion_type, "2") == 0){
-            printf("argc: %d\n", argc);
             if(strcmp(argv[3], "-separator") == 0) {
                 separator_choice = atoi(argv[4]);
             } else {
