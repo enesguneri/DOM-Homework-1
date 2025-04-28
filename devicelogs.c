@@ -11,14 +11,23 @@ typedef struct {
     char device_id[10];
     char timestamp[20];
     float temperature;
-    float humidity;
+    int humidity;
     char status[10];
-    char location[31];
+    char location[50];
     char alert_level[10];
     int battery;
     char firmware_ver[20];
     uint8_t event_code;
 } DeviceLog;
+
+int keyStartGlobal;
+int keyEndGlobal;
+char orderGlobal[4];
+
+typedef struct {
+    DeviceLog record;
+    unsigned char key[10];
+} RecordWithKey;
 
 // Corrected csv_to_binary function
 void csv_to_binary(int separator_choice, int opsys_choice, const char *input_filename, const char *output_filename) {
@@ -66,7 +75,7 @@ void csv_to_binary(int separator_choice, int opsys_choice, const char *input_fil
             device.temperature = (*token != '\0') ? atof(token) : -999.0f;
 
             token = strsep(&ptrLine, separator);
-            device.humidity = (*token != '\0') ? atof(token) : -1.0f;
+            device.humidity = (*token != '\0') ? atoi(token) : -1;
 
             token = strsep(&ptrLine, separator);
             strcpy(device.status, (*token != '\0') ? token : "N/A");
@@ -95,7 +104,7 @@ void csv_to_binary(int separator_choice, int opsys_choice, const char *input_fil
     printf("CSV to binary conversion completed successfully.\n");
 }
 
-// Helper functions 
+// Helper functions (fixed signatures)
 
 int read_setup_params(const char *filename, int *keyStart, int *keyEnd, char *order, char *dataFileName) {
     FILE *file = fopen(filename, "r");
@@ -135,7 +144,20 @@ int read_setup_params(const char *filename, int *keyStart, int *keyEnd, char *or
     return 0;
 }
 
-int read_binary_file(const char *filename, int keyStart, int keyEnd, int *recordCount, DeviceLog **records) {
+int compareKeys(const void *a,const void *b) {
+    RecordWithKey *recA = (RecordWithKey*)a;
+    RecordWithKey *recB = (RecordWithKey*)b;
+
+    int cmp = memcmp(recA->key, recB->key, keyStartGlobal - keyEndGlobal + 1);
+
+    if(strcmp(orderGlobal, "ASC") == 0){
+        return cmp;
+    } else if(strcmp(orderGlobal, "DESC") == 0) {
+        return -cmp;
+    }
+} 
+
+int read_binary_file(const char *filename, int keyStart, int keyEnd, int *recordCount, RecordWithKey **records) {
     FILE *file = fopen(filename, "rb");
     if (!file) {
         fprintf(stderr, "Error opening binary file\n");
@@ -147,63 +169,75 @@ int read_binary_file(const char *filename, int keyStart, int keyEnd, int *record
     fseek(file, 0, SEEK_SET);
 
     *recordCount = file_size / sizeof(DeviceLog);
-    *records = malloc(sizeof(DeviceLog) * (*recordCount));
+    *records = malloc(sizeof(RecordWithKey) * (*recordCount));
 
     for (int i = 0; i < *recordCount; i++) {
-        fread(&(*records)[i], sizeof(DeviceLog), 1, file);
+        fread(&(*records)[i].record, sizeof(DeviceLog), 1, file);
+        memcpy(&(*records)[i].key, ((char*)&(*records)[i].record) + keyStart, keyEnd - keyStart + 1);//keyend - keystart + 1 byte kadar veri structtaki key alanına kopyalanır.
     }
+
+    qsort(*records, *recordCount, sizeof(RecordWithKey), compareKeys);
 
     fclose(file);
     return 0;
 }
 
-void generate_xml(const char *filename, DeviceLog *records, int recordCount) {
+void generate_xml(const char *filename, RecordWithKey *records, int recordCount) {
     xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
-
     xmlNodePtr root_element = xmlNewNode(NULL, BAD_CAST "smartlogs");
-
-    xmlNewProp(root_element, BAD_CAST "xmlns", BAD_CAST "http://www.example.com/smartlogs");
-
     xmlDocSetRootElement(doc, root_element);
 
     for (int i = 0; i < recordCount; i++) {
+        DeviceLog record = records[i].record;
         xmlNodePtr entry = xmlNewChild(root_element, NULL, BAD_CAST "entry", NULL);
         char tempID[10];
         snprintf(tempID, sizeof(tempID), "%d", i + 1);
         xmlNewProp(entry, BAD_CAST "id", BAD_CAST tempID);
 
         xmlNodePtr device = xmlNewChild(entry, NULL, BAD_CAST "device", NULL);
-        xmlNewChild(device, NULL, BAD_CAST "device_id", BAD_CAST records[i].device_id);
-        xmlNewChild(device, NULL, BAD_CAST "location", BAD_CAST records[i].location);
-        xmlNewChild(device, NULL, BAD_CAST "firmware_ver", BAD_CAST records[i].firmware_ver);
+        xmlNewChild(device, NULL, BAD_CAST "device_id", BAD_CAST record.device_id);
+        xmlNewChild(device, NULL, BAD_CAST "location", BAD_CAST record.location);
+        xmlNewChild(device, NULL, BAD_CAST "firmware_ver", BAD_CAST record.firmware_ver);
 
         xmlNodePtr metrics = xmlNewChild(entry, NULL, BAD_CAST "metrics", NULL);
-        xmlNewProp(metrics, BAD_CAST "status", BAD_CAST records[i].status);
-        xmlNewProp(metrics, BAD_CAST "alert_level", BAD_CAST records[i].alert_level);
+        xmlNewProp(metrics, BAD_CAST "status", BAD_CAST record.status);
+        xmlNewProp(metrics, BAD_CAST "alert_level", BAD_CAST record.alert_level);
 
         char temp[20];
-        snprintf(temp, sizeof(temp), "%f", records[i].temperature);
-        xmlNewChild(metrics, NULL, BAD_CAST "temperature", BAD_CAST temp);
+        snprintf(temp, sizeof(temp), "%.2f", record.temperature);
+        if(record.temperature != -999.0f) {
+            xmlNewChild(metrics, NULL, BAD_CAST "temperature", BAD_CAST temp);
+        } else {
+            xmlNewChild(metrics, NULL, BAD_CAST "temperature", BAD_CAST "N/A");
+        }
+        
+        snprintf(temp, sizeof(temp), "%d", record.humidity);
+        if(record.humidity != -1) {
+            xmlNewChild(metrics, NULL, BAD_CAST "humidity", BAD_CAST temp);
+        } else {
+            xmlNewChild(metrics, NULL, BAD_CAST "humidity", BAD_CAST "N/A");
+        }
 
-        snprintf(temp, sizeof(temp), "%f", records[i].humidity);
-        xmlNewChild(metrics, NULL, BAD_CAST "humidity", BAD_CAST temp);
+        snprintf(temp, sizeof(temp), "%d", record.battery);
+        if(record.battery != -1) {
+            xmlNewChild(metrics, NULL, BAD_CAST "battery", BAD_CAST temp);
+        } else {
+            xmlNewChild(metrics, NULL, BAD_CAST "battery", BAD_CAST "N/A");
+        }
 
-        snprintf(temp, sizeof(temp), "%d", records[i].battery);
-        xmlNewChild(metrics, NULL, BAD_CAST "battery", BAD_CAST temp);
+        xmlNewChild(entry, NULL, BAD_CAST "timestamp", BAD_CAST record.timestamp);
 
-        xmlNewChild(entry, NULL, BAD_CAST "timestamp", BAD_CAST records[i].timestamp);
-
-        snprintf(temp, sizeof(temp), "%d", records[i].event_code);
+        snprintf(temp, sizeof(temp), "%d", record.event_code);
         xmlNodePtr event_code = xmlNewChild(entry, NULL, BAD_CAST "event_code", BAD_CAST temp);
 
         char hexBigEndian[10];
-        sprintf(hexBigEndian, "%02X%02X%02X%02X", 0x00, 0x00, 0x00, records[i].event_code);
+        sprintf(hexBigEndian, "%02X%02X%02X%02X", 0x00, 0x00, 0x00, record.event_code);
 
         char hexLittleEndian[10];
-        sprintf(hexLittleEndian, "%02X%02X%02X%02X", records[i].event_code, 0x00, 0x00, 0x00);
+        sprintf(hexLittleEndian, "%02X%02X%02X%02X", record.event_code, 0x00, 0x00, 0x00);
 
         //güncel işletim sistemleri little endian kullanır.
-        uint32_t littleEndDecimal = (records[i].event_code) | (0x00 << 8) | (0x00 << 16) | (0x00 << 24);//4 byte veri okunduğu için 32 bitlik sayı kullanılır.
+        uint32_t littleEndDecimal = (record.event_code) | (0x00 << 8) | (0x00 << 16) | (0x00 << 24);//4 byte veri okunduğu için 32 bitlik sayı kullanılır.
         snprintf(temp, sizeof(temp), "%u", littleEndDecimal);
 
         xmlNewProp(event_code, BAD_CAST "hexBig", BAD_CAST hexBigEndian);
@@ -216,6 +250,8 @@ void generate_xml(const char *filename, DeviceLog *records, int recordCount) {
     xmlCleanupParser();
 }
 
+
+
 void binary_to_xml(const char *outputFile) {
     int keyStart, keyEnd;
     char order[4], dataFileName[100];
@@ -224,13 +260,12 @@ void binary_to_xml(const char *outputFile) {
         return;
     }
 
-    //printf("Key Start: %d\n", keyStart);
-    //printf("Key End: %d\n", keyEnd);
-    //printf("Order: %s\n", order);
-    //printf("Data File Name: %s\n", dataFileName);
-
+    keyStartGlobal = keyStart;
+    keyEndGlobal = keyEnd;
+    strcpy(orderGlobal, order);
     int recordCount;
-    DeviceLog *records;
+    RecordWithKey *records;
+    
     if (read_binary_file(dataFileName, keyStart, keyEnd, &recordCount, &records)) {
         return;
     }
