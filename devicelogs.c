@@ -5,7 +5,7 @@
 #include <json-c/json.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include <libxml/xmlschemas.h> // <-- Added this for XML schema validation
+#include <libxml/xmlschemastypes.h>
 
 typedef struct {
     char device_id[10];
@@ -187,10 +187,24 @@ void generate_xml(const char *filename, DeviceLog *records, int recordCount) {
         snprintf(temp, sizeof(temp), "%d", records[i].battery);
         xmlNewChild(metrics, NULL, BAD_CAST "battery", BAD_CAST temp);
 
-        snprintf(temp, sizeof(temp), "%d", records[i].event_code);
-        xmlNewChild(entry, NULL, BAD_CAST "event_code", BAD_CAST temp);
-
         xmlNewChild(entry, NULL, BAD_CAST "timestamp", BAD_CAST records[i].timestamp);
+
+        snprintf(temp, sizeof(temp), "%d", records[i].event_code);
+        xmlNodePtr event_code = xmlNewChild(entry, NULL, BAD_CAST "event_code", BAD_CAST temp);
+
+        char hexBigEndian[10];
+        sprintf(hexBigEndian, "%02X%02X%02X%02X", 0x00, 0x00, 0x00, records[i].event_code);
+
+        char hexLittleEndian[10];
+        sprintf(hexLittleEndian, "%02X%02X%02X%02X", records[i].event_code, 0x00, 0x00, 0x00);
+
+        //güncel işletim sistemleri little endian kullanır.
+        uint32_t littleEndDecimal = (records[i].event_code) | (0x00 << 8) | (0x00 << 16) | (0x00 << 24);//4 byte veri okunduğu için 32 bitlik sayı kullanılır.
+        snprintf(temp, sizeof(temp), "%u", littleEndDecimal);
+
+        xmlNewProp(event_code, BAD_CAST "hexBig", BAD_CAST hexBigEndian);
+        xmlNewProp(event_code, BAD_CAST "hexLittle", BAD_CAST hexLittleEndian);
+        xmlNewProp(event_code, BAD_CAST "decimal", BAD_CAST temp);
     }
 
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
@@ -223,6 +237,52 @@ void binary_to_xml(const char *outputFile) {
     printf("XML file generated successfully.\n");
 }
 
+void validate_xml(const char *XMLFileName,const char *XSDFileName){
+    xmlDocPtr doc;
+    xmlSchemaPtr schema = NULL;
+    xmlSchemaParserCtxtPtr ctxt;
+    
+    xmlLineNumbersDefault(1); //set line numbers, 0> no substitution, 1>substitution
+    ctxt = xmlSchemaNewParserCtxt(XSDFileName); //create an xml schemas parse context
+    schema = xmlSchemaParse(ctxt); //parse a schema definition resource and build an internal XML schema
+    xmlSchemaFreeParserCtxt(ctxt); //free the resources associated to the schema parser context
+    
+    doc = xmlReadFile(XMLFileName, NULL, 0); //parse an XML file
+    if (doc == NULL)
+    {
+        fprintf(stderr, "Could not parse %s\n", XMLFileName);
+    }
+    else
+    {
+        xmlSchemaValidCtxtPtr ctxt;  //structure xmlSchemaValidCtxt, not public by API
+        int ret;
+        
+        ctxt = xmlSchemaNewValidCtxt(schema); //create an xml schemas validation context 
+        ret = xmlSchemaValidateDoc(ctxt, doc); //validate a document tree in memory
+        if (ret == 0) //validated
+        {
+            printf("%s validates\n", XMLFileName);
+        }
+        else if (ret > 0) //positive error code number
+        {
+            printf("%s fails to validate\n", XMLFileName);
+        }
+        else //internal or API error
+        {
+            printf("%s validation generated an internal error\n", XMLFileName);
+        }
+        xmlSchemaFreeValidCtxt(ctxt); //free the resources associated to the schema validation context
+        xmlFreeDoc(doc);
+    }
+    // free the resource
+    if(schema != NULL)
+        xmlSchemaFree(schema); //deallocate a schema structure
+
+    xmlSchemaCleanupTypes(); //cleanup the default xml schemas types library
+    xmlCleanupParser(); //cleans memory allocated by the library itself 
+    xmlMemoryDump(); //memory dump
+}
+
 int main(int argc, char *argv[]) {
     if(argc == 8){
 
@@ -230,17 +290,8 @@ int main(int argc, char *argv[]) {
     const char *output_file = argv[2];
     const char *conversion_type = argv[3];
     int separator_choice;
-    int opsys_choice = atoi(argv[7]);
+    int opsys_choice;
     
-    
-    if (strcmp(conversion_type, "1") == 0) {
-        csv_to_binary(separator_choice, opsys_choice, input_file, output_file);
-    } else if (strcmp(conversion_type, "3") == 0) {
-        //validate_xml(input_file, output_file);
-    } else {
-        printf("Invalid conversion type.\n");
-        return 1;
-    }
 
     if(strcmp(argv[4], "-separator") == 0) {
         separator_choice = atoi(argv[5]);
@@ -255,7 +306,18 @@ int main(int argc, char *argv[]) {
         printf("Invalid OS argument.\n");
         return 1;
     }
+    
+    if (strcmp(conversion_type, "1") == 0) {
+        csv_to_binary(separator_choice, opsys_choice, input_file, output_file);
+    } else if (strcmp(conversion_type, "3") == 0) {
+        validate_xml(input_file, output_file);
+    } else {
+        printf("Invalid conversion type.\n");
+        return 1;
     }
+    
+    }
+
     else if(argc == 7){
         const char *output_file = argv[1];
         const char *conversion_type = argv[2];
@@ -277,22 +339,21 @@ int main(int argc, char *argv[]) {
             binary_to_xml(output_file);
         }
     }
+
     else if(argc < 3){
         if (strcmp(argv[1], "-h") == 0) {
-            printf("Usage: ./devicelogs <input_file> <output_file> <conversion_type> -separator <1|2|3> -opsys <1|2|3> [-h]\n");
+            printf("Usage: ./deviceTool <input_file> <output_file> <conversion_type> -separator <1|2|3> -opsys <1|2|3> [-h]\n");
             return 0;
         }
     }
 
-    printf("Conversion completed successfully.\n");
-
     //compile komutu
-    //gcc devicelogs.c -o devicelogs -I/usr/include/libxml2 -lxml2 -ljson-c
+    //gcc devicelogs.c -o deviceTool -I/usr/include/libxml2 -lxml2 -ljson-c
 
     //run komutu örnekleri
-    //./devicelogs smartlogs.csv logdata.dat 1 -separator 1 -opsys 2
-    //./devicelogs smartlogs.xml 2 -separator 1 -opsys 2
-    //./devicelogs smartlogs.xml smartlogs.xsd 3 -separator 1 -opsys 2
-    //./devicelogs -h
+    //./deviceTool smartlogs.csv logdata.dat 1 -separator 1 -opsys 2
+    //./deviceTool smartlogs.xml 2 -separator 1 -opsys 2
+    //./deviceTool smartlogs.xml smartlogs.xsd 3 -separator 1 -opsys 2
+    //./deviceTool -h
     return 0;
 }
