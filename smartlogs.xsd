@@ -11,43 +11,39 @@
                     <xs:complexType>
                         <xs:sequence>
 
-                            <xs:element name="device" maxOccurs="unbounded">
+                            <xs:element name="device" maxOccurs="unbounded" minOccurs="0">
                                 <xs:complexType>
                                     <xs:sequence>
-
-                                        <xs:element name="deviceId">
+                                        <xs:element name="device_id" minOccurs="1">
                                             <xs:simpleType>
                                                 <xs:restriction base="xs:string">
                                                     <xs:pattern value="[A-Z]{3}[0-9]{4}"/>
                                                 </xs:restriction>
                                             </xs:simpleType>
                                         </xs:element>
-
-                                        <xs:element name="location">
+                                        <xs:element name="location" minOccurs="0">
                                             <xs:simpleType>
                                                 <xs:restriction base="xs:string">
                                                     <xs:maxLength value="30"/>
                                                 </xs:restriction>
                                             </xs:simpleType>
                                         </xs:element>
-
-                                        <xs:element name="firmware_ver">
+                                        <xs:element name="firmware_ver" minOccurs="0">
                                             <xs:simpleType>
                                                 <xs:restriction base="xs:string">
-                                                    <xs:pattern value="V[0-9]+\.[0-9]+\.[0-9]+"/>
+                                                    <xs:pattern value="v[0-9]+\.[0-9]+\.[0-9]+"/>
+                                                    <xs:pattern value="N/A"/>
                                                 </xs:restriction>
                                             </xs:simpleType>
                                         </xs:element>
-
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
 
-                            <xs:element name="metrics" maxOccurs="unbounded">
+                            <xs:element name="metrics" maxOccurs="unbounded" minOccurs="0">
                                 <xs:complexType>
                                     <xs:sequence>
-
-                                        <xs:element name="temperature">
+                                        <xs:element name="temperature" minOccurs="0">
                                             <xs:simpleType>
                                                 <xs:restriction base="xs:float">
                                                     <xs:minInclusive value="-30.0"/>
@@ -55,8 +51,15 @@
                                                 </xs:restriction>
                                             </xs:simpleType>
                                         </xs:element>
-
-                                        <xs:element name="humidity">
+                                        <xs:element name="humidity" minOccurs="0">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:float">
+                                                    <xs:minInclusive value="0.00"/>
+                                                    <xs:maxInclusive value="100.00"/>
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element name="battery" minOccurs="1">
                                             <xs:simpleType>
                                                 <xs:restriction base="xs:integer">
                                                     <xs:minInclusive value="0"/>
@@ -64,35 +67,27 @@
                                                 </xs:restriction>
                                             </xs:simpleType>
                                         </xs:element>
-
-                                        <xs:element name="battery">
-                                            <xs:simpleType>
-                                                <xs:restriction base="xs:integer">
-                                                    <xs:minInclusive value="0"/>
-                                                    <xs:maxInclusive value="100"/>
-                                                </xs:restriction>
-                                            </xs:simpleType>
-                                        </xs:element>
-
                                     </xs:sequence>
 
-                                    <xs:attribute name="status" use="required">
+                                    <xs:attribute name="status" use="optional">
                                         <xs:simpleType>
                                             <xs:restriction base="xs:string">
                                                 <xs:enumeration value="⚠️"/>
                                                 <xs:enumeration value="🟢"/>
                                                 <xs:enumeration value="🔴"/>
+                                                <xs:enumeration value="N/A"/>
                                             </xs:restriction>
                                         </xs:simpleType>
                                     </xs:attribute>
 
-                                    <xs:attribute name="alert_level" use="required">
+                                    <xs:attribute name="alert_level" use="optional">
                                         <xs:simpleType>
                                             <xs:restriction base="xs:string">
                                                 <xs:enumeration value="LOW"/>
                                                 <xs:enumeration value="MEDIUM"/>
                                                 <xs:enumeration value="HIGH"/>
                                                 <xs:enumeration value="CRITICAL"/>
+                                                <xs:enumeration value="N/A"/>
                                             </xs:restriction>
                                         </xs:simpleType>
                                     </xs:attribute>
@@ -100,52 +95,49 @@
                                 </xs:complexType>
                             </xs:element>
 
-                            <xs:element name="Timestamp" type="xs:dateTime"/>
+                            <xs:element name="timestamp" minOccurs="0">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}"/>
+                                        <xs:pattern value="N/A"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
 
-                            <xs:element name="event_code">
+                            <xs:element name="event_code" minOccurs="0">
                                 <xs:complexType>
                                     <xs:simpleContent>
                                         <xs:extension base="xs:int">
-                                            <xs:restriction base="xs:int">
-                                                <xs:minInclusive value="0"/>
-                                                <xs:maxInclusive value="255"/>
-                                            </xs:restriction>
+                                            <xs:attribute name="hexBig" use="required">
+                                                <xs:simpleType>
+                                                    <xs:restriction base="xs:string">
+                                                        <xs:pattern value="[0-9A-F]{8}"/>
+                                                    </xs:restriction>
+                                                </xs:simpleType>
+                                            </xs:attribute>
+                                            <xs:attribute name="hexLittle" use="required">
+                                                <xs:simpleType>
+                                                    <xs:restriction base="xs:string">
+                                                        <xs:pattern value="[0-9A-F]{8}"/>
+                                                    </xs:restriction>
+                                                </xs:simpleType>
+                                            </xs:attribute>
+                                            <xs:attribute name="decimal" use="required" type="xs:integer"/>
                                         </xs:extension>
                                     </xs:simpleContent>
-                                    <xs:attribute name="hexBig" use="required">
-                                        <xs:simpleType>
-                                            <xs:restriction base="xs:string">
-                                                <xs:pattern value="[0-9A-F]{8}"/>
-                                            </xs:restriction>
-                                        </xs:simpleType>
-                                    </xs:attribute>
-                                    <xs:attribute name="hexLittle" use="required">
-                                        <xs:simpleType>
-                                            <xs:restriction base="xs:string">
-                                                <xs:pattern value="[0-9A-F]{8}"/>
-                                            </xs:restriction>
-                                        </xs:simpleType>
-                                    </xs:attribute>
-                                    <xs:attribute name="decimal" use="required">
-                                        <xs:simpleType>
-                                            <xs:restriction base="xs:string">
-                                                <xs:pattern value="[0-9]{9}"/>
-                                            </xs:restriction>
-                                        </xs:simpleType>
-                                    </xs:attribute>
                                 </xs:complexType>
                             </xs:element>
 
-                            
                         </xs:sequence>
 
-                        <xs:attribute name="id" type="xs:integer" use="required">
+                        <xs:attribute name="id" use="required">
                             <xs:simpleType>
                                 <xs:restriction base="xs:integer">
                                     <xs:minInclusive value="1"/>
                                     <xs:maxInclusive value="1000000"/>
                                 </xs:restriction>
                             </xs:simpleType>
+                        </xs:attribute>
 
                     </xs:complexType>
                 </xs:element>

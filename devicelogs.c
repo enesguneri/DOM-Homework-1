@@ -95,7 +95,7 @@ void csv_to_binary(int separator_choice, int opsys_choice, const char *input_fil
     printf("CSV to binary conversion completed successfully.\n");
 }
 
-// Helper functions (fixed signatures)
+// Helper functions 
 
 int read_setup_params(const char *filename, int *keyStart, int *keyEnd, char *order, char *dataFileName) {
     FILE *file = fopen(filename, "r");
@@ -159,7 +159,11 @@ int read_binary_file(const char *filename, int keyStart, int keyEnd, int *record
 
 void generate_xml(const char *filename, DeviceLog *records, int recordCount) {
     xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
+
     xmlNodePtr root_element = xmlNewNode(NULL, BAD_CAST "smartlogs");
+
+    xmlNewProp(root_element, BAD_CAST "xmlns", BAD_CAST "http://www.example.com/smartlogs");
+
     xmlDocSetRootElement(doc, root_element);
 
     for (int i = 0; i < recordCount; i++) {
