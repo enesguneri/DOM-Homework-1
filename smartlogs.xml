@@ -91,7 +91,6 @@
       <battery>99</battery>
     </metrics>
     <timestamp>2025-03-13T01:22:15</timestamp>
-    <event_code hexBig="00000000" hexLittle="00000000" decimal="0">0</event_code>
   </entry>
   <entry id="8">
     <device>
@@ -119,7 +118,6 @@
       <battery>98</battery>
     </metrics>
     <timestamp>2025-02-14T23:24:13</timestamp>
-    <event_code hexBig="00000000" hexLittle="00000000" decimal="0">0</event_code>
   </entry>
   <entry id="10">
     <device>
@@ -324,7 +322,6 @@
       <battery>73</battery>
     </metrics>
     <timestamp>N/A</timestamp>
-    <event_code hexBig="00000000" hexLittle="00000000" decimal="0">0</event_code>
   </entry>
   <entry id="25">
     <device>
@@ -379,7 +376,6 @@
       <battery>38</battery>
     </metrics>
     <timestamp>2025-03-03T15:38:40</timestamp>
-    <event_code hexBig="00000000" hexLittle="00000000" decimal="0">0</event_code>
   </entry>
   <entry id="29">
     <device>
@@ -580,7 +576,6 @@
       <battery>41</battery>
     </metrics>
     <timestamp>2025-03-03T17:14:53</timestamp>
-    <event_code hexBig="00000000" hexLittle="00000000" decimal="0">0</event_code>
   </entry>
   <entry id="44">
     <device>

@@ -235,21 +235,24 @@ void generate_xml(const char *filename, RecordWithKey *records, int recordCount)
         xmlNewChild(entry, NULL, BAD_CAST "timestamp", BAD_CAST record.timestamp);
 
         snprintf(temp, sizeof(temp), "%d", record.event_code);
-        xmlNodePtr event_code = xmlNewChild(entry, NULL, BAD_CAST "event_code", BAD_CAST temp);
+        if(record.event_code != 0) {
+            xmlNodePtr event_code = xmlNewChild(entry, NULL, BAD_CAST "event_code", BAD_CAST temp);
 
-        char hexBigEndian[10];
-        sprintf(hexBigEndian, "%02X%02X%02X%02X", 0x00, 0x00, 0x00, record.event_code);
-
-        char hexLittleEndian[10];
-        sprintf(hexLittleEndian, "%02X%02X%02X%02X", record.event_code, 0x00, 0x00, 0x00);
-
-        //güncel işletim sistemleri little endian kullanır.
-        uint32_t littleEndDecimal = (record.event_code) | (0x00 << 8) | (0x00 << 16) | (0x00 << 24);//4 byte veri okunduğu için 32 bitlik sayı kullanılır.
-        snprintf(temp, sizeof(temp), "%u", littleEndDecimal);
-
-        xmlNewProp(event_code, BAD_CAST "hexBig", BAD_CAST hexBigEndian);
-        xmlNewProp(event_code, BAD_CAST "hexLittle", BAD_CAST hexLittleEndian);
-        xmlNewProp(event_code, BAD_CAST "decimal", BAD_CAST temp);
+            char hexBigEndian[10];
+            sprintf(hexBigEndian, "%02X%02X%02X%02X", 0x00, 0x00, 0x00, record.event_code);
+    
+            char hexLittleEndian[10];
+            sprintf(hexLittleEndian, "%02X%02X%02X%02X", record.event_code, 0x00, 0x00, 0x00);
+    
+            //güncel işletim sistemleri little endian kullanır.
+            uint32_t littleEndDecimal = (record.event_code) | (0x00 << 8) | (0x00 << 16) | (0x00 << 24);//4 byte veri okunduğu için 32 bitlik sayı kullanılır.
+            snprintf(temp, sizeof(temp), "%u", littleEndDecimal);
+    
+            xmlNewProp(event_code, BAD_CAST "hexBig", BAD_CAST hexBigEndian);
+            xmlNewProp(event_code, BAD_CAST "hexLittle", BAD_CAST hexLittleEndian);
+            xmlNewProp(event_code, BAD_CAST "decimal", BAD_CAST temp);
+        }
+        
     }
 
     xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
