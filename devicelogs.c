@@ -29,7 +29,7 @@ typedef struct {
     unsigned char key[10];
 } RecordWithKey;
 
-// Corrected csv_to_binary function
+// Functions to convert CSV to binary
 void csv_to_binary(int separator_choice, int opsys_choice, const char *input_filename, const char *output_filename) {
     FILE *csvFile = fopen(input_filename, "r");    
     FILE *datFile = fopen(output_filename, "wb"); 
@@ -55,7 +55,7 @@ void csv_to_binary(int separator_choice, int opsys_choice, const char *input_fil
             default: strcpy(end_of_line, "\r\n"); break;
         }
 
-        fgets(line, sizeof(line), csvFile); // skip header line
+        fgets(line, sizeof(line), csvFile);
 
         while (fgets(line, sizeof(line), csvFile)) {
             char *ptrLine = line;
@@ -104,8 +104,7 @@ void csv_to_binary(int separator_choice, int opsys_choice, const char *input_fil
     printf("CSV to binary conversion completed successfully.\n");
 }
 
-// Helper functions (fixed signatures)
-
+// Helper functions 
 int read_setup_params(const char *filename, int *keyStart, int *keyEnd, char *order, char *dataFileName) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -144,6 +143,7 @@ int read_setup_params(const char *filename, int *keyStart, int *keyEnd, char *or
     return 0;
 }
 
+// Function to compare keys for qsort function
 int compareKeys(const void *a,const void *b) {
     RecordWithKey *recA = (RecordWithKey*)a;
     RecordWithKey *recB = (RecordWithKey*)b;
@@ -182,6 +182,8 @@ int read_binary_file(const char *filename, int keyStart, int keyEnd, int *record
     return 0;
 }
 
+
+// Function to generate XML from binary data
 void generate_xml(const char *filename, RecordWithKey *records, int recordCount) {
     xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");
     xmlNodePtr root_element = xmlNewNode(NULL, BAD_CAST "smartlogs");
@@ -261,7 +263,7 @@ void generate_xml(const char *filename, RecordWithKey *records, int recordCount)
 }
 
 
-
+// Function to convert binary data to XML
 void binary_to_xml(const char *outputFile) {
     int keyStart, keyEnd;
     char order[4], dataFileName[100];
@@ -286,6 +288,7 @@ void binary_to_xml(const char *outputFile) {
     printf("XML file generated successfully.\n");
 }
 
+// Function to validate XML using XSD
 void validate_xml(const char *XMLFileName,const char *XSDFileName){
     xmlDocPtr doc;
     xmlSchemaPtr schema = NULL;
@@ -331,6 +334,7 @@ void validate_xml(const char *XMLFileName,const char *XSDFileName){
     xmlCleanupParser(); //cleans memory allocated by the library itself 
     xmlMemoryDump(); //memory dump
 }
+
 
 int main(int argc, char *argv[]) {
     if(argc == 8){
