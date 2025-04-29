@@ -193,36 +193,43 @@ void generate_xml(const char *filename, RecordWithKey *records, int recordCount)
         char tempID[10];
         snprintf(tempID, sizeof(tempID), "%d", i + 1);
         xmlNewProp(entry, BAD_CAST "id", BAD_CAST tempID);
-
+        
         xmlNodePtr device = xmlNewChild(entry, NULL, BAD_CAST "device", NULL);
         xmlNewChild(device, NULL, BAD_CAST "device_id", BAD_CAST record.device_id);
-        xmlNewChild(device, NULL, BAD_CAST "location", BAD_CAST record.location);
-        xmlNewChild(device, NULL, BAD_CAST "firmware_ver", BAD_CAST record.firmware_ver);
+
+        if(strcmp(record.location, "N/A") != 0) {
+            xmlNewChild(device, NULL, BAD_CAST "location", BAD_CAST record.location);
+        }
+
+        if(strcmp(record.firmware_ver, "N/A") != 0) {
+            xmlNewChild(device, NULL, BAD_CAST "firmware_ver", BAD_CAST record.firmware_ver);
+        }
+        
+        
+        
 
         xmlNodePtr metrics = xmlNewChild(entry, NULL, BAD_CAST "metrics", NULL);
-        xmlNewProp(metrics, BAD_CAST "status", BAD_CAST record.status);
-        xmlNewProp(metrics, BAD_CAST "alert_level", BAD_CAST record.alert_level);
+        if(strcmp(record.status, "N/A") != 0) {
+            xmlNewProp(metrics, BAD_CAST "status", BAD_CAST record.status);
+        }
+        if(strcmp(record.alert_level, "N/A") != 0) {
+            xmlNewProp(metrics, BAD_CAST "alert_level", BAD_CAST record.alert_level);
+        }
 
         char temp[20];
         snprintf(temp, sizeof(temp), "%.2f", record.temperature);
         if(record.temperature != -999.0f) {
             xmlNewChild(metrics, NULL, BAD_CAST "temperature", BAD_CAST temp);
-        } else {
-            xmlNewChild(metrics, NULL, BAD_CAST "temperature", BAD_CAST "N/A");
         }
         
         snprintf(temp, sizeof(temp), "%d", record.humidity);
         if(record.humidity != -1) {
             xmlNewChild(metrics, NULL, BAD_CAST "humidity", BAD_CAST temp);
-        } else {
-            xmlNewChild(metrics, NULL, BAD_CAST "humidity", BAD_CAST "N/A");
         }
 
         snprintf(temp, sizeof(temp), "%d", record.battery);
         if(record.battery != -1) {
             xmlNewChild(metrics, NULL, BAD_CAST "battery", BAD_CAST temp);
-        } else {
-            xmlNewChild(metrics, NULL, BAD_CAST "battery", BAD_CAST "N/A");
         }
 
         xmlNewChild(entry, NULL, BAD_CAST "timestamp", BAD_CAST record.timestamp);
